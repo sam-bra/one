@@ -244,18 +244,11 @@
     <script>
         // Lista de palavras lidas a partir do arquivo "words.txt"
         const words = `
-        
-        
-        "casa", "gato", "rato", "mesa", "amigo",
-    "lapis", "verde", "livro", "ceu", "sol",
-    "flor", "passaro", "bola", "joia", "anel",
-    "lago", "peixe", "arvore", "mar", "vento",
-    "corpo", "prato", "escola", "filme", "piano",
-    "danca", "festa", "lua", "noite", "neve",
-    "pular", "fruta", "crianca", "doce", "bolo",
-    "amor", "beijo", "dente", "cidade", "falar",
-    "musica", "tempo", "montanha", "correr", "gente",
-    "fazer", "andar", "trabalho", "saber", "nascer"
+              
+        andar
+        trabalho
+        saber
+        nascer
         
         `.split('\n').map(word => word.trim()).filter(Boolean);
 
@@ -323,6 +316,21 @@
     <a href="http://www.github.com">
     <img src="github.png" alt="github"> </a>
 
+
+    <p>Número de visitantes: <span id="visitorCount">Carregando...</span></p>
+
+    <script>
+        // Código JavaScript para fazer uma solicitação ao servidor
+        fetch('/getVisitorCount')
+            .then(response => response.json())
+            .then(data => {
+                // Atualiza o número de visitantes na página
+                document.getElementById('visitorCount').textContent = data.count;
+            })
+            .catch(error => {
+                console.error('Erro ao obter o número de visitantes:', error);
+            });
+    </script>
 
 
 </center>
