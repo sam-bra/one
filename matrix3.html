@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Background</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: monospace;
+            background: black;
+            color: green;
+        }
+
+        .matrix {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .stream {
+            position: absolute;
+            opacity: 0.1;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Adicione aqui o conteúdo da sua página -->
+    <div class="content">
+        <h1>Minha Página</h1>
+        <p>Seu conteúdo aqui...</p>
+    </div>
+
+    <!-- Efeito de fundo da matriz -->
+    <div class="matrix">
+        <script>
+            const streams = [];
+            const symbolSize = 24;
+
+            function setup() {
+                createCanvas(window.innerWidth, window.innerHeight);
+                for (let i = 0; i <= width / symbolSize; i++) {
+                    const stream = new Stream(i * symbolSize, round(random(-2000, 0)));
+                    stream.generateSymbols();
+                    streams.push(stream);
+                }
+                textSize(symbolSize);
+            }
+
+            function draw() {
+                background(0);
+                streams.forEach(stream => {
+                    stream.render();
+                });
+            }
+
+            class Symbol {
+                constructor(x, y, speed, first) {
+                    this.x = x;
+                    this.y = y;
+                    this.value = String.fromCharCode(
+                        0x30A0 + round(random(0, 96))
+                    );
+                    this.speed = speed;
+                    this.switchInterval = round(random(2, 20));
+                    this.first = first;
+
+                    this.setToRandomSymbol = function () {
+                        if (frameCount % this.switchInterval == 0) {
+                            this.value = String.fromCharCode(
+                                0x30A0 + round(random(0, 96))
+                            );
+                        }
+                    };
+
+                    this.rain = function () {
+                        this.y = this.y >= height ? 0 : this.y + this.speed;
+                    };
+                }
+            }
+
+            class Stream {
+                constructor(x, y) {
+                    this.symbols = [];
+                    this.totalSymbols = round(random(5, 30));
+                    this.speed = random(2, 10);
+
+                    this.generateSymbols = function () {
+                        let first = round(random(0, 4)) == 1;
+                        for (let i = 0; i <= this.totalSymbols; i++) {
+                            let symbol = new Symbol(
+                                x,
+                                y,
+                                this.speed,
+                                first
+                            );
+                            symbol.setToRandomSymbol();
+                            this.symbols.push(symbol);
+                            y -= symbolSize;
+                            first = false;
+                        }
+                    };
+
+                    this.render = function () {
+                        this.symbols.forEach(symbol => {
+                            if (symbol.first) {
+                                fill(140, 255, 170);
+                            } else {
+                                fill(0, 255, 70);
+                            }
+                            text(symbol.value, symbol.x, symbol.y);
+                            symbol.rain();
+                            symbol.setToRandomSymbol();
+                        });
+                    };
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>
